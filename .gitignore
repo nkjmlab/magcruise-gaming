@@ -35,3 +35,4 @@ copy*.bat
 /magcruise-scenario/pom.xml.versionsBackup
 /magcruise-webui/pom.xml.versionsBackup
 /pom.xml.versionsBackup
+/build/gaming-coveralls.bat
