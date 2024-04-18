@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<title>Participation records | MAGCruise</title>
+	<script>
+		$(function () {
+			$("#tbl-sessions").DataTable({
+				order: Array([3, 'desc'])
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>参加記録 (Participation records)</h2>
+				<p>このページでは，参加したゲームセッションのログを見ることが出来ます．</p>
+				<table id="tbl-sessions" class="table table-bordered table-striped table-hover small">
+					<thead>
+						<tr>
+							<th>操作</th>
+							<th>ID</th>
+							<th>セッション名</th>
+							<th>開始日時</th>
+							<th>プレイヤ名</th>
+							<th>rd.</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="sItem : ${gameSessionsWithAssignmentsAndProgresses}">
+							<td><a th:href="|participation-record.html?processId=${sItem.gameSession.processId}&playerName=${sItem.assignment.playerName}|"
+									class="btn btn-sm btn-success">ログ</a></td>
+							<td th:text="${sItem.gameSession.processId}"></td>
+							<td th:text="${sItem.gameSession.sessionName}"></td>
+							<td th:text="${#dates.format(sItem.gameSession.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+							<td th:text="${sItem.assignment.playerName}"></td>
+							<td th:text="${sItem.progress.roundnum}"></td>
+							<td th:text="${sItem.progress.status}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

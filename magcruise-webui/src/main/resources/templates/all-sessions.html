@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<title>All sessions | MAGCruise</title>
+	<script>
+		$(function () {
+			$("#tbl-sessions").DataTable({
+				"pageLength": 100,
+				"order": Array([3, 'desc'])
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>セッション履歴 (Session history) (500件以内)</h2>
+				<div class="table-responsive-sm">
+					<table id="tbl-sessions" class="table table-bordered table-striped table-hover small">
+						<thead>
+							<tr>
+								<th style="width: 8em;">操作</th>
+								<th>ID</th>
+								<th>セッション名</th>
+								<th>開始日時</th>
+								<th>所有者</th>
+								<th>rd.</th>
+								<th>Status</th>
+								<th>User IDs</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="sItem: ${gameSessions}">
+								<td><a th:href="|monitor.html?processId=${sItem.gameSession.processId}|"
+										class="btn btn-sm btn-primary">操作</a> <a
+										th:href="|session-record.html?processId=${sItem.gameSession.processId}|"
+										class="btn btn-sm btn-success">ログ</a></td>
+								<td th:text="${sItem.gameSession.processId}"></td>
+								<td th:text="${sItem.gameSession.sessionName}"></td>
+								<td th:text="${#dates.format(sItem.gameSession.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+								<td th:text="${sItem.gameSession.userId}"></td>
+								<td style="width: 2em; max-width: 2em;" th:text="${sItem.progress.roundnum}"></td>
+								<td th:text="${sItem.progress.status}"></td>
+								<td>
+									<div th:each="ass : ${sItem.assignments}" th:text=${ass.userId}></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

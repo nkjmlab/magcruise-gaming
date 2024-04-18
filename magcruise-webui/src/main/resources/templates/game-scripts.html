@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+  <object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+  <script th:src="|/js/game-scripts.js?${MODIFIED_DATES.js_game_scripts_js}|"></script>
+  <title>Game Scripts | MAGCruise</title>
+  <script th:inline="javascript">
+    const gameScripts = [[${ gameScriptsMap }]];
+    const origGameScripts = [[${ origGameScriptsMap }]];
+		const basicAuthUserId = [[${ basicAuthUserId }]];
+		const basicAuthPassword = [[${ basicAuthPassword }]];
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <h2>ゲームスクリプト (Game scripts)</h2>
+        <hr>
+        <h6>遠隔講義向けアナウンス</h6>
+        <ul class="text-muted small">
+          <li>このページでゲームセッションを起動します．教員からの指示に従って，ゲームセッションを起動して下さい．
+            <ul>
+              <li>「起動」ボタンを押すと，ポップアップ画面が開きます．「Additional Script」に <code>(define
+                *ADMIN_ID* "あなたの学籍番号(例:1X21C000)")</code> が含まれていることを確認して下さい．ここでプレイヤーの役割とプレイヤーIDを対応づけています．
+              </li>
+            </ul>
+          </li>
+          <li>「実行」ボタンを押すとゲームセッションが起動します．画面が切り替わるまでそのまま待ってください．</li>
+          <li>
+            ゲームセッションを起動した後，もう一度ゲームセッションを起動すると，古いゲームセッションは停止され，新しいゲームセッションが開始されます．停止したゲームセッションのログは<a
+              href="participation-records.html">参加記録</a>から見ることが出来ます．
+
+          </li>
+        </ul>
+        <div class="float-end bottom-margin" th:if=" ${currentUser.isAdmin()}">
+          <button class="btn btn-sm btn-primary btn-add-script" data-bs-toggle="modal" data-bs-backdrop="static"
+            data-bs-target="#edit-script-modal" data-method-name="addScript">追加</button>
+          <!--
+          <button class="btn btn-sm btn-primary btn-edit" data-bs-toggle="modal" data-bs-backdrop="static"
+            data-bs-target="#start-multi-game-modal">JSONで起動</button>
+            -->
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <table id="tbl-scripts" class="table table-bordered table-striped table-hover small">
+          <thead>
+            <tr>
+              <th style="width: 12em;">操作</th>
+              <th>ID</th>
+              <th>ゲーム名</th>
+              <th>作成者</th>
+              <th>更新日時</th>
+              <th>説明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="gameScript : ${gameScripts}">
+              <td th:data-game-script-id="${gameScript.id}"><button class="btn btn-sm btn-success btn-start"
+                  data-bs-toggle="modal" data-bs-backdrop="static" data-bs-target="#start-game-modal"
+                  th:data-game-script-id="${gameScript.id}">起動</button>
+                <button class="btn btn-sm btn-warning delete btn-delete" th:if=" ${currentUser.isAdmin()}">削除</button>
+                <button class="btn btn-sm btn-light btn-edit" data-bs-toggle="modal" data-bs-backdrop="static"
+                  data-bs-target="#edit-script-modal" data-method-name="updateScript"
+                  th:data-game-script-id="${gameScript.id}" th:if=" ${currentUser.isAdmin()}">編集</button>
+              </td>
+              <td th:text="${gameScript.id}"></td>
+              <td th:text="${gameScript.name}"></td>
+              <td th:text="${gameScript.userId}"></td>
+              <td th:text="${#dates.format(gameScript.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+              <td th:utext="${gameScript.description}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="start-game-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">ゲームの起動</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3">
+            <div class="col-12">
+              <label class="control-label">Script ID:</label> <input type="text" class="form-control input-script-id"
+                readonly>
+            </div>
+            <div class="col-12">
+              <label class="control-label">Root Broker Url:</label> <input type="text"
+                class="form-control input-root-broker-url" th:value="${rootBrokerUrl}">
+            </div>
+            <div class="col-12">
+              <label class="control-label">Additional Script:</label>
+              <textarea class="form-control input-additional-script" rows="6"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="control-label">Script:</label>
+              <textarea class="form-control input-script" rows="6" readonly></textarea>
+            </div>
+            <div class="col-12">
+              <label class="control-label">Class Name:</label> <input type="text" class="form-control input-class-name"
+                th:readonly="${!currentUser.isAdmin()}">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+          <button id="btn-ok-exec" type="button" class="btn btn-primary">実行</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="edit-script-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">スクリプトの追加/編集</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3">
+            <div class="col-12">
+              <label class="control-label">Script ID:</label> <input type="text" class="form-control input-script-id">
+            </div>
+            <div class="col-12">
+              <label class="control-label">Script Name:</label> <input type="text"
+                class="form-control input-script-name">
+            </div>
+            <div class="col-12">
+              <label class="control-label">Description:</label>
+              <textarea class="form-control input-description" rows="3"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="control-label">Source Url:</label> <input type="text" class="form-control input-source-url">
+            </div>
+            <div class="col-12">
+              <label class="control-label">Additional Script:</label>
+              <textarea class="form-control input-additional-script" rows="12"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="control-label">Script:</label>
+              <textarea class="form-control input-script" rows="12"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="control-label">Class Name:</label> <input type="text" class="form-control input-class-name">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+          <button id="btn-ok-update" type="button" class="btn btn-primary">更新</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="start-multi-game-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">JSONで起動</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3">
+            <div class="col-12">
+              <label class="control-label">JSON:</label>
+              <textarea class="form-control" id="input-json" rows="30" th:inline="text">
+ {
+    "root_broker_url": "[[${rootBrokerUrl}]]",
+
+    "game_id": "",
+    "sessions": [
+        [
+            "description1",
+            "init_script1"
+        ],
+        [
+            "description2",
+            "init_script2"
+        ]
+    ],
+}
+              </textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btn-ok-exec-json">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

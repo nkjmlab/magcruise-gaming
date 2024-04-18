@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<script th:src="|/webjars/jssha/dist/sha256.js|"></script>
+	<script th:src="|/js/login.js?${MODIFIED_DATES.js_login_js}|"></script>
+	<script th:src="|/js/environment-checker.js?${MODIFIED_DATES.js_environment_checker_js}|"></script>
+	<title>Login | MAGCruise</title>
+</head>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2 th:text="#{title}">Login</h2>
+				<form class="row g-3">
+					<div class="col-12">
+						<label class="description" th:text="#{userName}">User name</label> <input class="form-control"
+							type="text" id="user-id" name="user-id" size="20" placeholder="input your username"
+							pattern=".{3,}" required />
+					</div>
+					<div class="col-12">
+						<label class="description" th:text="#{password}">Password</label> <input class="form-control"
+							type="password" id="password" name="password" size="20" placeholder="input your password" />
+					</div>
+					<div class="col-12">
+						<div class="btn-group submit" role="group">
+							<button class="btn btn-primary" type="button" id="btn-login">Login</button>
+						</div>
+						<input id="submit-for-validation" type="submit" formmethod="GET" style="display: none;">
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<hr>
+				<p>
+					If you don't have account, <a href="signup.html" class="btn btn-sm btn-secondary">Sign
+						up</a> from here.
+				</p>
+			</div>
+		</div>
+		<div id="row-check-env" class="row top-margin">
+			<div class="col-12">
+				<p id="os-browser-check-result"></p>
+				<p id="websocket-check-result"></p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<div class="text-end">
+					<a href="https://websocketstest.com/"> Does HTML5 Websockets work for you? @
+						https://websocketstest.com/</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

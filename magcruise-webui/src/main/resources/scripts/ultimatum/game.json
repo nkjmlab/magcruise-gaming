@@ -1,0 +1,9 @@
+{
+	"id": "ultimatum-game-admin",
+	"name": "最後通牒ゲーム (二人用)",
+	"userId": "admin",
+	"description": "最後通牒ゲーム (二人用) をサーバ上で起動します．*ADMIN_ID*にはセッションの管理をするユーザを指定します．通常は実行者自身です．*FIRST_PLAYER_ID*と*SECOND_PLAYER_ID*には担当する学生のIDを指定します．",
+	"sourceUrl": "https://github.com/MAGCruise/magcruise-scenario/tree/master/src/main/java/org/magcruise/gaming/examples/ultimatum",
+	"scriptFile": "bootstrap.scm",
+	"additionalScriptFile": "additional.scm"
+}

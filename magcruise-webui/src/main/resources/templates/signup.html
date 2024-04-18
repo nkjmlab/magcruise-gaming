@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<script th:src="|/webjars/jssha/dist/sha256.js|"></script>
+	<script th:src="|/js/signup.js?${MODIFIED_DATES.js_signup_js}|"></script>
+	<title>Sign up | MAGCruise</title>
+</head>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>Sign up</h2>
+				<form class="row g-3">
+					<div class="col-12">
+						<label class="description">User ID</label> <input class="form-control" id="user-id"
+							pattern=".{3,}" placeholder="Pick a user Id" required />
+					</div>
+					<div class="col-12">
+						<label class="description">Nickname</label> <input class="form-control" id="nickname"
+							pattern=".{3,}" placeholder="Input your nickname" required />
+					</div>
+					<div class="col-12">
+						<label class="description">Group name</label> <input class="form-control" id="group-name"
+							placeholder="Input your group name" required />
+					</div>
+					<div class="col-12">
+						<label class="description">Role</label> <input class="form-control" id="role" value="USER"
+							th:readonly="${currentUser==null||!currentUser.isAdmin()}" />
+					</div>
+					<div class="col-12">
+						<label class="description">Password</label> <input class="form-control" type="password"
+							placeholder="Create a password" id="password" required />
+					</div>
+					<div class="col-12">
+						<label class="description">Comfirm password</label> <input class="form-control" type="password"
+							placeholder="Retype the password" id="confirm-password" name="password" required />
+					</div>
+					<div class="col-12">
+						<div class="btn-group btn-group-justified submit" role="group">
+							<a class="btn btn-primary" role="button" id="sign-up-btn" href="#">Submit</a>
+						</div>
+						<button id="submit-for-validation" type="submit" formmethod="GET"
+							style="display: none;"></button>
+					</div>
+				</form>
+				<p id="notice">
+					If you want to login, <a href="login.html">Login</a> from here.
+				</p>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

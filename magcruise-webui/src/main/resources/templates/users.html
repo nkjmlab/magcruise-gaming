@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<script th:src="|/js/users.js?${MODIFIED_DATES.js_users_js}|"></script>
+	<title>Users | MAGCruise</title>
+</head>
+
+<body>
+	<div class="container" th:if="${currentUser.isAdmin()}">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>ユーザ管理</h2>
+				<div class="float-end bottom-margin">
+					<button class="btn btn-sm btn-primary btn-upload-csv" data-bs-toggle="modal"
+						data-bs-target="#upload-csv-modal">csvで追加</button>
+					<a class="btn btn-sm btn-light" href="signup.html#addUser">追加</a>
+				</div>
+			</div>
+			<div class="col-sm-12">
+				<table id="tbl-users" class="table table-bordered table-striped table-hover small">
+					<thead>
+						<tr>
+							<th style="width: 2.5em"><input id="input-check-all" type="checkbox"></th>
+							<th>グループ名</th>
+							<th>ユーザID</th>
+							<th>ニックネーム</th>
+							<th>ログイン日時</th>
+							<th>ロール</th>
+							<th style="width: 14em;">操作</th>
+						</tr>
+					</thead>
+					<tbody th:remove="all-but-first">
+						<tr th:each=" user: ${users}">
+							<td><input type="checkbox" class="input-check-all-target" /></td>
+							<td th:text="${user.groupName}"></td>
+							<td th:text="${user.userId}"></td>
+							<td th:text="${user.nickname}"></td>
+							<td th:text="${#dates.format(user.modifiedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+							<td th:text="${user.role}">1</td>
+							<td th:data-user-id="${user.userId}"><a th:href="|user-settings.html?userId=${user.userId}|"
+									class="btn btn-sm btn-light">編集</a>
+								<a th:href="|password.html?userId=${user.userId}|"
+									class="btn btn-sm btn-light">パスワード</a>
+								<button class="btn btn-sm btn-warning delete btn-delete">削除</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="upload-csv-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">ユーザCSVの追加</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form class="row g-3">
+						<div class="col-12">
+							<label class="control-label">User CSV file:</label> <input id="file-input" name="file-input"
+								type="file" class="form-control" accept="text/csv" onchange="handleFiles(this.files)" />
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="btn-submit" disabled>Submit</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

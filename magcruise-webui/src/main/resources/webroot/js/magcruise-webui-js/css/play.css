@@ -1,0 +1,93 @@
+input:focus,
+button:focus,
+a:focus {
+	border: 3px solid rgba(126, 239, 104, 0.8) !important;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6) !important;
+	outline: 0 none !important;
+}
+
+.btn-play {
+	display: none;
+}
+
+li.message-no-show {
+	list-style-type: none;
+}
+
+li.message {
+	list-style-type: none;
+}
+
+li.message:before {
+	content: "";
+	display: block;
+	width: 100%;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	border: 0;
+	border-top: 1px solid #FFF;
+}
+
+#message_list {
+	padding-left: 0.5em;
+}
+
+#message_list,
+#inputs_area {
+	max-height: 450px;
+	overflow-y: auto;
+}
+
+#inputting {
+	min-height: 3em;
+}
+
+.arrived_date {
+	text-align: right;
+	color: #999;
+	font-size: 50%;
+}
+
+.balloon-1-left {
+	position: relative;
+	display: inline-block;
+	padding: 0 15px;
+	width: auto;
+	min-width: 115px;
+	height: 40px;
+	line-height: 34px;
+	color: #19283C;
+	text-align: center;
+	background: #F6F6F6;
+	border: 1px solid #dcdcdc;
+	z-index: 0;
+}
+
+.balloon-1-left:before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: -6px;
+	margin-top: -9px;
+	display: block;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 9px 9px 9px 0;
+	border-color: transparent #F6F6F6 transparent transparent;
+	z-index: 0;
+}
+
+.balloon-1-left:after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: -10px;
+	margin-top: -10px;
+	display: block;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 10px 10px 10px 0;
+	border-color: transparent #dcdcdc transparent transparent;
+}

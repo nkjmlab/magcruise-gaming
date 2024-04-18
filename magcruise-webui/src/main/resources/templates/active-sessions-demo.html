@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<title>Active sessions | MAGCruise</title>
+	<script th:inline="javascript">
+		const basicAuthUserId = [[${ basicAuthUserId }]];
+		const basicAuthPassword = [[${ basicAuthPassword }]];
+	</script>
+	<script th:src="|/js/active-sessions.js?${MODIFIED_DATES.js_active_sessions_js}|"></script>
+</head>
+<style>
+	tbody {
+		font-size: 12px;
+	}
+</style>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>サーバ上セッション (Active sessions on server)</h2>
+				<div class="float-end bottom-margin">
+					<a id="btn-all-stop" class="btn btn-sm btn-danger">一括終了</a>
+				</div>
+				<table id="tbl-sessions" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 2em;"><input id="input-check-all" type="checkbox"></th>
+							<th>ID</th>
+							<th>セッション名</th>
+							<th>開始日時</th>
+							<th>所有者</th>
+							<th>rd.</th>
+							<th>Status</th>
+							<th>User IDs</th>
+							<th style="width: 6em;">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="sItem : ${gameSessions}">
+							<td><input type="checkbox" class="input-check-all-target"
+									th:data-pid="${sItem.gameSession.processId}"
+									th:data-broker-url="${sItem.gameSession.brokerUrl}" /></td>
+							<td th:text="${sItem.gameSession.processId}"></td>
+							<td th:text="${sItem.gameSession.sessionName}"></td>
+							<td th:text="${#dates.format(sItem.gameSession.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+							<td th:text="${sItem.gameSession.userId}"></td>
+							<td th:text="${sItem.progress.roundnum}"></td>
+							<td th:text="${sItem.progress.status}"></td>
+							<td>
+								<div th:each="ass : ${sItem.assignments}" th:text=${ass.userId}></div>
+							</td>
+							<td><a th:href="|monitor.html?processId=${sItem.gameSession.processId}|"
+									class="btn btn-sm btn-success">操作</a> <a class="btn btn-sm btn-warning btn-stop"
+									th:data-pid="${sItem.gameSession.processId}"
+									th:data-broker-url="${sItem.gameSession.brokerUrl}">終了</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

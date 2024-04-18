@@ -1,0 +1,9 @@
+{
+	"id": "minority-game",
+	"name": "マイノリティゲーム",
+	"userId": "demo",
+	"description": "マイノリティゲーム",
+	"sourceUrl": "https://github.com/MAGCruise/magcruise-scenario/tree/master/src/main/java/org/magcruise/gaming/examples/minority",
+	"scriptFile": "bootstrap.scm",
+	"additionalScriptFile": "additional.scm"
+}

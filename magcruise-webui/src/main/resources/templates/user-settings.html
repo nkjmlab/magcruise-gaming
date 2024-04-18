@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<script th:src="|/js/user-settings.js?${MODIFIED_DATES.js_user_settings_js}|"></script>
+	<title>User settings | MAGCruise</title>
+</head>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>ユーザ設定</h2>
+				<div class="col-12">
+					<div class="col-12">
+						<label class="description">User name</label> <input class="form-control" id="user-id"
+							th:value="${user.userId}" pattern=".{3,}" required
+							th:readonly="${!currentUser.isAdmin()}" />
+					</div>
+					<div class="col-12">
+						<label class="description">Group name</label> <input class="form-control" id="group-name"
+							th:value="${user.groupName}" th:readonly="${!currentUser.isAdmin()}" />
+					</div>
+					<div class="col-12">
+						<label class="description">Role</label> <input class="form-control" id="role"
+							th:value="${user.role}" th:readonly="${!currentUser.isAdmin()}" />
+					</div>
+					<div class="col-12">
+						<label class="description">Nickname</label> <input class="form-control" id="nickname"
+							th:value="${user.nickname}" />
+					</div>
+					<div class="col-12">
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-primary" id="btn-update">Update</button>
+						</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+</body>
+
+</html>

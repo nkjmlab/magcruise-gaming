@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	background-color: #FAFAFA;
+}
+
+.container {
+	background-color: #FFF;
+}
+
+.navbar {
+	background: url("/img/home_banner_bg.jpg") !important;
+	border-color: #296b90 !important;
+}
+
+#top-navbar>.navbar-nav>.nav-item>.btn {
+	color: #CCC;
+}
+
+.nav.navbar-nav .active>a,
+.nav.navbar-nav a:hover,
+.nav.navbar-nav a:focus {
+	background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+.top-margin {
+	margin-top: 15px;
+}
+
+.bottom-margin {
+	margin-bottom: 15px;
+}
+
+.top-margin-sm {
+	margin-top: 6px;
+}
+
+.bottom-margin-sm {
+	margin-bottom: 6px;
+}

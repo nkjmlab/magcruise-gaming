@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<title>Open sessions | MAGCruise</title>
+	<script>
+		$(function () {
+			$("#tbl-sessions").DataTable({
+				"order": Array([3, 'desc'])
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>開催セッション (Open sessions)</h2>
+				<p>
+					このページにはあなたが参加できるゲームセッションが表示されます． ゲームの記録は<a href="participation-records.html">参加記録</a>ページから閲覧できます．
+				</p>
+				<p>
+					このページのリストに何も表示されていない場合は，ゲームセッションの作成を待っている状態です．しばらく待ってから，<span
+						class="badge text-bg-info">F5</span>キーを押すか，ブラウザのリロードボタン <i class="fas fa-redo"></i>
+					を押して，ページを再読み込みして下さい． <i class="fas fa-exclamation-triangle text-danger"></i>
+					再読み込みは連続して行わないでください．
+				</p>
+			</div>
+			<div class="col-sm-12 d-none">
+				<h6>遠隔講義向けアナウンス</h6>
+				<p>まだゲームセッションを作成していない場合は，<a href="game-scripts.html">スクリプト</a>ページからゲームセッションを起動してください．</p>
+				<p>ゲームセッションを起動したにも関わらず，このページのリストに何も表示されていない場合は，ゲームセッションの作成を待っている状態です．しばらく待ってから，<span
+						class="badge text-bg-info">F5</span>キーを押すか，ブラウザのリロードボタン <i class="fas fa-redo"></i>
+					を押して，ページを再読み込みして下さい． <i class="fas fa-exclamation-triangle text-danger"></i>
+					再読み込みは連続して行わないでください．
+				<p>数分待っても表示されない場合は，もう一度<a href="game-scripts.html">スクリプト</a>ページからゲームセッションを起動してください．</p>
+			</div>
+			<div class="col-sm-12" th:if="${currentUser.isAdmin()}">
+				<p><b class="text-danger">実行中のセッションを管理するには<a href="active-sessions.html">セッション管理</a>にアクセスして下さい．</b></p>
+			</div>
+			<div class="col-sm-12">
+				<table id="tbl-sessions" class="table table-bordered table-striped table-hover small">
+					<thead>
+						<tr>
+							<th style="width: 3em;">操作</th>
+							<th>ID</th>
+							<th>セッション名</th>
+							<th>開始日時</th>
+							<th style="width: 1.5em;">rd.</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="sItem : ${gameSessionsWithAssignmentsAndProgresses}">
+							<td><a th:href="|play.html?processId=${sItem.gameSession.processId}&playerName=${sItem.assignment.playerName}|"
+									class="btn btn-sm btn-success">参加</a></td>
+							<td th:text="${sItem.gameSession.processId}"></td>
+							<td th:text="${sItem.gameSession.sessionName}"></td>
+							<td th:text="${#dates.format(sItem.gameSession.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+							<td th:text="${sItem.progress.roundnum}"></td>
+							<td><span
+									th:if='${currentUser.isAdmin() or !sItem.gameSession.sessionName.contains("anony")}'><span
+										th:text="${sItem.progress.status}"></span></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+GroupName,UserId,Password,Username,Role,Language
+MAGCruiseGroup,user1,password,username1,USER,ja
+MAGCruiseGroup,user2,password,username2,USER,ja
+MAGCruiseGroup,user3,password,username3,USER,ja
+MAGCruiseGroup,user4,password,username4,USER,ja
+MAGCruiseGroup,user5,password,username5,USER,ja
+MAGCruiseGroup,user6,password,username6,USER,ja
+MAGCruiseGroup,user7,password,username7,USER,ja
