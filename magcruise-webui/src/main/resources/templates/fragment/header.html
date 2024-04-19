@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head th:fragment="meta-fragment">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" th:href="|/webjars/bootstrap/${webjars.bootstrap}/dist/css/bootstrap.min.css|">
+	<link rel="stylesheet" charset="utf-8"
+		th:href="|/webjars/datatables.net-bs5/${webjars.datatables_net_bs5}/css/dataTables.bootstrap5.min.css|">
+	<link rel="stylesheet" charset="utf-8"
+		th:href="|/webjars/fortawesome\_\_fontawesome-free/${webjars.fortawesome\_\_fontawesome_free}/css/all.min.css|">
+
+	<link rel="stylesheet" th:href="|/css/common.css?${MODIFIED_DATES.css_common_css}|" />
+
+	<script th:src="|/webjars/jquery/${webjars.jquery}/dist/jquery.min.js|"></script>
+	<script th:src="|/webjars/stacktrace-js/${webjars.stacktrace_js}/dist/stacktrace.min.js|"></script>
+	<script th:src="|/webjars/sweetalert2/${webjars.sweetalert2}/dist/sweetalert2.all.min.js|"></script>
+	<script th:src="|/webjars/bootstrap/${webjars.bootstrap}/dist/js/bootstrap.bundle.min.js|"></script>
+	<script th:src="|/webjars/datatables.net/${webjars.datatables_net}/js/dataTables.min.js|"></script>
+	<script th:src="|/webjars/datatables.net-bs5/${webjars.datatables_net_bs5}/js/dataTables.bootstrap5.min.js|"></script>
+	<script th:src="|/webjars/sprintf-js/${webjars.sprintf_js}/dist/sprintf.min.js|"></script>
+	<script th:src="|/webjars/ua-parser-js/${webjars.ua_parser_js}/dist/ua-parser.min.js|"></script>
+
+	<script src="/js/magcruise-webui-js/js/lib/parseUri.js"></script>
+
+	<script
+		th:src="|/js/magcruise-webui-js/js/util/jsonrpc.js?${MODIFIED_DATES.js_magcruise_webui_js_js_util_jsonrpc_js}|"></script>
+	<script
+		th:src="|/js/magcruise-webui-js/js/util/utils.js?${MODIFIED_DATES.js_magcruise_webui_js_js_util_utils_js}|"></script>
+	<script
+		th:src="|/js/magcruise-webui-js/js/common/common.js?${MODIFIED_DATES.js_magcruise_webui_js_js_common_common_js}|"></script>
+	<script th:src="|/js/utils.js?${MODIFIED_DATES.js_utils_js}|"></script>
+</head>
+<div class="container">
+	<div th:fragment="top-menu">
+		<div class="row top-margin bottom-margin no-gutter">
+			<div class="col-sm-12">
+				<div id="logo">
+					<img src="/img/magcruise_logo_big.png" width="315" />
+				</div>
+				<script th:inline="javascript">
+					const currentUser = /*[[${currentUser}]]*/;
+				</script>
+			</div>
+		</div>
+		<div class="row" th:if='${currentUser!=null && currentUser.getUserId().equals("demo")}'>
+			<div class="col-sm-12">
+				<div class="navbar container-fluid" role="navigation">
+					<ul class="nav navbar-nav nav-pills">
+						<li><a href="game-scripts-demo.html">スクリプト</a></li>
+						<li><a href="active-sessions-demo.html">セッション管理</a></li>
+						<li><a href="login.html#logout">ログアウト</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row bottom-margin" th:if='${currentUser!=null && !currentUser.getUserId().equals("demo")}'>
+			<div class="col-sm-12">
+				<nav id="top-navbar" class="navbar bg-light navbar-expand-md" role="navigation">
+					<ul class="navbar-nav ps-2">
+						<li class="nav-item"><a class="btn btn-sm" th:if=" ${currentUser.isOperator()}"
+								href="game-scripts.html">スクリプト</a></li>
+						<li class="nav-item"><a class="btn btn-sm" href="open-sessions.html">開催セッション</a></li>
+						<li class="nav-item"><a class="btn btn-sm" href="participation-records.html">参加記録</a></li>
+					</ul>
+					<ul class="navbar-nav ms-auto" th:if="${currentUser!=null}">
+						<li class="nav-item"><a class="btn btn-sm disabled" href="#"> <i class="fa-solid fa-user"></i>
+								<span th:text="${currentUser.userId}"> </span>
+							</a></li>
+						<li class="dropdown nav-item"><a href="#" class="dropdown-toggle btn btn-sm"
+								data-bs-toggle="dropdown"> <i class="fas fa-wrench"></i> 管理 <b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end ">
+								<li><a class="dropdown-item btn btn-sm" th:if=" ${currentUser.isOperator()}"
+										href="active-sessions.html">セッション管理</a></li>
+								<li><a class="dropdown-item btn btn-sm" th:if=" ${currentUser.isAdmin()}"
+										href="users.html">ユーザ管理</a>
+								</li>
+								<li><a class="dropdown-item btn btn-sm" th:if=" ${currentUser.isAdmin()}"
+										href="all-sessions.html">セッション履歴</a></li>
+								<li><a class="dropdown-item btn btn-sm" href="local-sessions.html"
+										th:if=" ${currentUser.isAdmin()}">ローカルセッション</a></li>
+							</ul>
+						</li>
+						<li class="dropdown nav-item"><a href="#" class="dropdown-toggle btn btn-sm"
+								data-bs-toggle="dropdown"> <i class="fas fa-cog"></i> 設定 <b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end">
+								<li><a class="dropdown-item btn btn-sm"
+										th:href="|user-settings.html?userId=${currentUser.userId}|">ユーザ設定</a></li>
+								<li><a class="dropdown-item btn btn-sm"
+										th:href="|password.html?userId=${currentUser.userId}|">パスワード変更</a></li>
+								<li><a class="dropdown-item btn btn-sm" href="login.html#logout">ログアウト</a></li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+		<div id="row-flash" class="row">
+			<div class="col-xs-12">
+				<div id="flash" class="col-sm-12"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</html>

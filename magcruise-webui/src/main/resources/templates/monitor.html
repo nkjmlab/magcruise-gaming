@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<link rel="stylesheet"
+		th:href="|/js/magcruise-webui-js/css/monitor.css?${MODIFIED_DATES.js_magcruise_webui_js_css_monitor_css}|" />
+	<script src="/js/magcruise-webui-js/js/lib/T.js"></script>
+	<script
+		th:src="|/js/magcruise-webui-js/js/monitor/progress.js?${MODIFIED_DATES.js_magcruise_webui_js_js_monitor_progress_js}|"></script>
+	<script
+		th:src="|/js/magcruise-webui-js/js/monitor/stdio.js?${MODIFIED_DATES.js_magcruise_webui_js_js_monitor_stdio_js}|"></script>
+	<script
+		th:src="|/js/magcruise-webui-js/js/monitor/assignment.js?${MODIFIED_DATES.js_magcruise_webui_js_js_monitor_assignment_js}|"></script>
+	<script
+		th:src="|/js/magcruise-webui-js/js/monitor/players_state.js?${MODIFIED_DATES.js_magcruise_webui_js_js_monitor_players_state_js}|"></script>
+	<script th:inline="javascript">
+		const sessionName = [[${ sessionName }]];
+		const basicAuthUserId = [[${ basicAuthUserId }]];
+		const basicAuthPassword = [[${ basicAuthPassword }]];
+
+		$(function () {
+			const pid = [[${ processId }]];
+			const usersList = [[${ usersList }]];
+			const uri = parseUri(location);
+			const webUiServiceUrl = "json/WebUiService";
+			const brokerUrl = changeProtocolIfNeeded([[${ brokerUrl }]]);
+
+			const gameProcessServiceUrl = brokerUrl + "/json/GameProcessService";
+
+			const processServiceUrl = brokerUrl + '/json/GameProcessService';
+			const gameServiceUrl = brokerUrl + "/json/GameInteractionService";
+
+			pollAssignmentAndCall(webUiServiceUrl, pid, usersList, 5000, '#playerAssignments', webUiServiceUrl);
+			pollStdOut(processServiceUrl, pid, 5000, '#stdout');
+			pollStdErr(processServiceUrl, pid, 5000, '#stderr');
+			pollPlayersState(gameServiceUrl, pid, 5000, '#status_tbl', './play.html?processId=PID&playerName=PLAYERNAME');
+			pollProgress(gameServiceUrl, pid, 5000, '#progress_list');
+			$('#btn-stop').on('click', function (e) {
+				swalConfirm("セッション終了", "終了して良いですか？", "warning", function (e) {
+					const client = new JsonRpcClient(new JsonRpcRequest(gameProcessServiceUrl, "stopProcess", [pid], function (data) {
+						swalAlert("ゲームセッションを終了しました", "終了したゲームのログは参加記録から閲覧できます");
+					}, function (data, textStatus, errorThrown) {
+						flashError("Fail to stop.");
+					}));
+					client.setAuth(basicAuthUserId, basicAuthPassword);
+					client.rpc();
+				});
+			});
+
+			$('#btn-resume').on('click', function (e) {
+				swalConfirm("再開", "記録された最終ラウンドから再開して良いですか？", "warning", function (e) {
+					const client = new JsonRpcClient(new JsonRpcRequest(webUiServiceUrl, "resume", [pid], function (data) {
+						swalAlert("ゲームセッションを再開しました");
+					}, function (data, textStatus, errorThrown) {
+						flashError("Fail to resume.");
+					}));
+					client.rpc();
+				});
+			});
+
+		});
+
+	</script>
+
+	<title>Monitor | MAGCruise</title>
+</head>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-12">
+				<h6 class="float-end">
+					Session name: <span th:text="${sessionName}"></span>
+				</h6>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4"></div>
+			<div class="col-md-8">
+				<div class="btn-group float-end">
+					<a th:href="|./session-record.html?processId=${processId}|"
+						class="btn btn-sm btn-success">Record</a>
+					<a id="btn-resume" class="btn btn-warning btn-sm" href="#">Resume</a><a id="btn-stop" href="#"
+						class="btn btn-danger btn-sm">Stop</a>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h5>Status</h5>
+				<div id="playerAssignments"></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<table id="status_tbl" class="table table-bordered table-striped small">
+						<thead></thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h5>StdErr</h5>
+				<pre id="stderr" class="card-body bg-light small"></pre>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h5>StdOut</h5>
+				<pre id="stdout" class="card-body bg-light small"></pre>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h5>Game Progress</h5>
+				<div id="game_progress_area" class="card-body bg-light small">
+					<ul id="progress_list" class="overflow-auto"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

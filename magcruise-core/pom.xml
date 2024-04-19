@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>magcruise-gaming-core</artifactId>
+	<parent>
+		<groupId>org.magcruise</groupId>
+		<artifactId>magcruise-gaming-parent</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<scm>
+		<connection>scm:git:git@github.com:magcruise/magcruise-core.git</connection>
+		<url>https://github.com/magcruise/magcruise-core</url>
+		<tag>HEAD</tag>
+	</scm>
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.16.1</version>
+		</dependency>
+		<!--
+		https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.arvyy/kawa -->
+		<dependency>
+			<groupId>com.github.arvyy</groupId>
+			<artifactId>kawa</artifactId>
+			<version>3.1.1</version>
+		</dependency>
+		<!--
+		https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/websocket-jakarta-client -->
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-jakarta-client</artifactId>
+			<version>11.0.20</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/scheme</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+</project>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<title>Session record | MAGCruise</title>
+	<script th:inline="javascript">
+		const gameRecords = [[${gameRecords}]];
+		const webUiServiceUrl = "/app/json/WebUiService";
+		const basicAuthUserId = [[${ basicAuthUserId }]];
+		const basicAuthPassword = [[${ basicAuthPassword }]];
+
+		$(function () {
+			$("#tbl-sessions").DataTable({
+				bInfo: false,
+				bFilter: false,
+				bPaginate: false,
+				order: Array([2, 'desc'])
+			});
+			$("#tbl-records").DataTable({
+				order: Array([2, 'desc'])
+			});
+
+			$('#show-record-modal').on('show.bs.modal', function (event) {
+				const recordIndex = $(event.relatedTarget).data('record-index');
+				const record = gameRecords[recordIndex].record;
+				$(this).find('.input-script').text(record);
+			});
+
+			$('.btn-resume').on('click', function (e) {
+				const roundnum = $(this).data('roundnum');
+				const pid = $(this).data('pid');
+				swalConfirm("再開", "指定のラウンドから再開して良いですか？", "warning", function (e) {
+					const client = new JsonRpcClient(new JsonRpcRequest(webUiServiceUrl, "resumeFrom", [pid, roundnum], function (data) {
+					}, function (data, textStatus, errorThrown) {
+						flashError("Fail to resume.");
+					}));
+					client.setAuth(basicAuthUserId, basicAuthPassword);
+					client.rpc();
+				});
+			});
+
+		});
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>セッションの記録(Session record)</h2>
+				<h3>参加ログ一覧</h3>
+				<table id="tbl-sessions" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>セッション名</th>
+							<th>開始日時</th>
+							<th>プレイヤ名</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="sItem : ${gameSessionsWithAssignments}">
+							<td th:text="${sItem.gameSession.processId}"></td>
+							<td th:text="${sItem.gameSession.sessionName}"></td>
+							<td th:text="${#dates.format(sItem.gameSession.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+							<td th:text="${sItem.assignment.playerName}"></td>
+							<td><a th:href="|participation-record.html?processId=${sItem.gameSession.processId}&playerName=${sItem.assignment.playerName}|"
+									class="btn btn-sm btn-success">閲覧</a></td>
+						</tr>
+					</tbody>
+				</table>
+				<h3>ゲームレコード一覧</h3>
+				<table id="tbl-records" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>日時</th>
+							<th>ラウンド</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="record, stat: ${gameRecords}">
+							<td th:text="${record.processId}"></td>
+							<td th:text="${#dates.format(record.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+							<td th:text="${record.roundnum}"></td>
+							<td><a class="btn btn-sm btn-warning btn-resume" th:data-roundnum="${record.roundnum}"
+									th:data-pid="${record.processId}">再開</a> <a class="btn btn-sm btn-light btn-show"
+									data-bs-toggle="modal" data-bs-target="#show-record-modal"
+									th:data-record-index="${stat.index}">詳細</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="modal fade" id="show-record-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-body">
+						<form class="row g-3">
+							<div class="col-12">
+								<label class="control-label">Script:</label>
+								<textarea class="form-control input-script" rows="30" readonly></textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

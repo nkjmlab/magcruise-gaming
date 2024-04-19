@@ -1,0 +1,181 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.magcruise</groupId>
+  <artifactId>magcruise-gaming-parent</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+  <url>https://github.com/nkjmlab/magcruise-gaming</url>
+  <properties>
+    <magcruise-gaming-version>${project.version}</magcruise-gaming-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <downloadSources>true</downloadSources>
+    <downloadJavadocs>true</downloadJavadocs>
+  </properties>
+
+  <modules>
+    <module>magcruise-core</module>
+    <module>magcruise-scenario</module>
+    <module>magcruise-broker</module>
+    <module>magcruise-webui</module>
+  </modules>
+
+  <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.nkjmlab/nkjmlab-utils-core -->
+    <dependency>
+      <groupId>org.nkjmlab</groupId>
+      <artifactId>nkjmlab-utils-core</artifactId>
+      <version>0.11.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.nkjmlab/sorm4j -->
+    <dependency>
+      <groupId>org.nkjmlab</groupId>
+      <artifactId>sorm4j</artifactId>
+      <version>2.1.5</version>
+    </dependency>
+    <!--
+    https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j2-impl -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j2-impl</artifactId>
+      <version>2.23.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>2.23.1</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>2.2.224</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.14.0</version>
+    </dependency>
+    <!--
+    https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+    <!--
+    https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+    <!--
+    https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.25.3</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.16.2</version>
+				<configuration>
+					<ruleSet>
+						<ignoreVersions>
+							<ignoreVersion>
+								<type>regex</type>
+								<version>
+									(?i).*(alpha|beta|snapshot|pre|rc|M\d).*</version>
+							</ignoreVersion>
+						</ignoreVersions>
+					</ruleSet>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.12.0</version>
+				<configuration>
+					<release>21</release>
+					<compilerArgs>
+						<arg>-proc:full</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.6.1</version>
+				<configuration>
+					<includeScope>compile</includeScope>
+				</configuration>
+			</plugin>
+			<!--
+			https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
+			</plugin>
+			<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
+				https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.12</version>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
+			https://mvnrepository.com/artifact/com.github.hazendaz.maven/coveralls-maven-plugin -->
+			<plugin>
+				<groupId>com.github.hazendaz.maven</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>4.5.0-M3</version>
+			</plugin>
+    </plugins>
+  </build>
+</project>

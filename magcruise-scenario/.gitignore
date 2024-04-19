@@ -1,0 +1,12 @@
+/tmp
+*.class
+*.log
+/.settings
+/target
+.classpath
+.project
+langrid-conf.json
+settings.json
+/src/main/java/org/magcruise/gaming/examples/croquette/resource/settings-many.json
+/src/main/java/org/magcruise/gaming/examples/croquette/resource/aws-settings.json
+/src/main/java/org/magcruise/gaming/examples/aws/aws-settings.json

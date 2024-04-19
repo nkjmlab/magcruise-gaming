@@ -1,0 +1,7 @@
+@charset "UTF-8";
+
+#stdout,
+#stderr,
+#progress_list {
+	max-height: 16em;
+}

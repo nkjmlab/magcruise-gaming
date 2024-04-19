@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<script th:src="|/js/game-scripts.js?${MODIFIED_DATES.js_game_scripts_js}|"></script>
+	<title>Game Scripts | MAGCruise</title>
+	<script th:inline="javascript">
+		const gameScripts = [[${ gameScriptsMap }]];
+		const basicAuthUserId = [[${ basicAuthUserId }]];
+		const basicAuthPassword = [[${ basicAuthPassword }]];
+	</script>
+	<style>
+		tbody {
+			font-size: 12px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>ゲームスクリプト (Game scripts)</h2>
+				<table id="tbl-scripts" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>ゲーム名</th>
+							<th>作成者</th>
+							<th>更新日時</th>
+							<th>説明</th>
+							<th style="width: 3em;">Source</th>
+							<th style="width: 12em;">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="gameScript : ${gameScripts}">
+							<td th:text="${gameScript.id}"></td>
+							<td th:text="${gameScript.name}"></td>
+							<td th:text="${gameScript.userId}"></td>
+							<td th:text="${#dates.format(gameScript.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+							<td th:utext="${gameScript.description}"></td>
+							<td><a th:href="${gameScript.sourceUrl}">Link</a></td>
+							<td th:data-game-script-id="${gameScript.id}"><button
+									class="btn btn-sm btn-success btn-start-demo" data-bs-toggle="modal"
+									data-bs-backdrop="static" data-bs-target="#start-game-modal"
+									th:data-game-script-id="${gameScript.id}">起動</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="start-game-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">ゲームの起動</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form class="row g-3">
+						<div class="col-12">
+							<label class="control-label">Script ID:</label> <input type="text"
+								class="form-control input-script-id" readonly>
+						</div>
+						<div class="col-12">
+							<label class="control-label">Root Broker Url:</label> <input type="text"
+								class="form-control input-root-broker-url" th:value="${rootBrokerUrl}" readonly>
+						</div>
+						<div class="col-12">
+							<label class="control-label">Additional Script:</label>
+							<textarea class="form-control input-additional-script" rows="15" readonly></textarea>
+						</div>
+						<div class="col-12">
+							<label class="control-label">Script:</label>
+							<textarea class="form-control input-script" rows="12" readonly></textarea>
+						</div>
+						<div style="display: none">
+							<label class="control-label">Class Name:</label> <input type="text"
+								class="form-control input-class-name" readonly>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+					<button id="btn-ok-exec" type="button" class="btn btn-primary">実行</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

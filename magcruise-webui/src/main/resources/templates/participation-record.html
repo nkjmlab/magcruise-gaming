@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+	<object th:insert="~{/fragment/header.html::meta-fragment}" th:remove="tag"></object>
+	<title>Session logs | MAGCruise</title>
+	<script>
+		$(function () {
+			$("#tbl-messages").DataTable({
+				order: Array([2, 'asc']),
+				dom: 'Blfrtip',
+				buttons: ['copy', 'csv', 'excel', 'print']
+			});
+			$("#tbl-inputs").DataTable({
+				order: Array([2, 'asc']),
+				dom: 'Blfrtip',
+				buttons: ['copy', 'csv', 'excel', 'print']
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<div th:insert="~{/fragment/header.html::top-menu}" th:remove="tag"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>ゲームログ</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<hr>
+				<h3>ゲーム画面ログ</h3>
+				<div id="row-header" class="row"></div>
+				<div id="row-top" class="row">
+					<div id="col-session-name" class="col-12">
+						<h6 class="float-end">
+							Session name: <span th:text="${sessionName}"></span>
+						</h6>
+						<div id="col-alert" class="col-12"></div>
+					</div>
+				</div>
+				<div id="row-mid" class="row">
+					<div id="col-inputs" class="col-md-6">
+						<h6>Input Requests</h6>
+						<div id="inputs_area" class=""></div>
+						<div id="inputting"></div>
+					</div>
+					<div id="col-messages" class="col-md-6">
+						<h6 id="messages-header">Messages</h6>
+						<div id="message_list" class="card-body bg-light"></div>
+					</div>
+				</div>
+				<div id="row-bottom" class="row"></div>
+				<div id="row-footer" class="row bottom-margin">
+					<hr>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<hr>
+				<h3>入力ログ</h3>
+				<div class="table-responsive-sm">
+					<table id="tbl-inputs" class="table table-bordered table-striped table-hover">
+						<thead>
+							<tr>
+								<th>Requiest ID</th>
+								<th>Process ID</th>
+								<th>作成日時</th>
+								<th>ラウンド番号</th>
+								<th>プレイヤー名</th>
+								<th>Inputs</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="input : ${inputs}">
+								<td th:text="${input.requestId}"></td>
+								<td th:text="${input.processId}"></td>
+								<td th:text="${#temporals.format(input.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+								<td th:text="${input.roundnum}"></td>
+								<td th:text="${input.playerName}"></td>
+								<td th:utext="${input.inputs}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<hr>
+				<h3>メッセージログ</h3>
+				<div class="table-responsive-sm">
+					<table id="tbl-messages" class="table table-bordered table-striped table-hover">
+						<thead>
+							<tr>
+								<th>Message ID</th>
+								<th>Process ID</th>
+								<th>作成日時</th>
+								<th>ラウンド番号</th>
+								<th>プレイヤー名</th>
+								<th>Message</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="message : ${messages}">
+								<td th:text="${message.messageId}"></td>
+								<td th:text="${message.processId}"></td>
+								<td th:text="${#dates.format(message.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+								<td th:text="${message.roundnum}"></td>
+								<td th:text="${message.playerName}"></td>
+								<td th:utext="${message.message}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
