@@ -1,10 +1,10 @@
 setlocal
-chcp 65001
 @echo off
+chcp 65001
 set CURRENT_DIR=%~dp0
-cd /d %CURRENT_DIR%
-cd ../
 set PATH=%PATH%;%CURRENT_DIR%\tools
+
+cd /d %CURRENT_DIR%\..\
 jps -lm|grep org.magcruise. | gawk "{print $1}" | xargs -r -n1 taskkill /F /T /PID
 
 :loop
