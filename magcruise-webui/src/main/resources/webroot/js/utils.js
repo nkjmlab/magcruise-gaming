@@ -44,7 +44,7 @@ function swalConfirm(title, text, type, callback) {
 		type: type ? type : null,
 		showCancelButton: true
 	}).then((e) => {
-		if (e.dismiss) {
+		if (e.isDismissed) {
 			return;
 		}
 		callback(e);
